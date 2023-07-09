@@ -37,6 +37,14 @@ public class VerbUtils {
 		return hasMode(verb) && Mode.CONDITIONAL.equals(verb.getMode());
 	}
 
+	public static boolean isIndicative(VerbConstraint verb) {
+		return hasMode(verb) && Mode.INDICATIVE.equals(verb.getMode());
+	}
+
+	public static boolean isAuxiliaryMode(VerbConstraint verb) {
+		return hasMode(verb) && List.of(Mode.CONDITIONAL, Mode.FUTURE).contains(verb.getMode());
+	}
+
 	public static boolean isInfinitiveOrGerund(VerbConstraint verb) {
 		return hasMode(verb) && List.of(Mode.INFINITIVE, Mode.GERUND).contains(verb.getMode());
 	}

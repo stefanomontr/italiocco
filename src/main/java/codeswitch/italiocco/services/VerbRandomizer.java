@@ -54,40 +54,37 @@ public class VerbRandomizer {
 	
 	// legal constraints
 	protected static Integer drawLegalPerson(VerbConstraint verb) throws IllegalVerbConstraintException {
-		if (VerbUtils.isInfinitiveOrGerund(verb)) {
-			return null;
-		}
 		if (!VerbUtils.hasMode(verb)) {
 			throw new IllegalVerbConstraintException("Cannot determine person without mode");
+		}
+		if (VerbUtils.isInfinitiveOrGerund(verb)) {
+			return null;
 		}
 		return randomInt(8);
 	}
 	
 	protected static Tense drawLegalTense(VerbConstraint verb) throws IllegalVerbConstraintException {
-		if (VerbUtils.isInfinitiveOrGerund(verb) || VerbUtils.isConditional(verb)) {
-			return getRandomElement(new Tense[] { Tense.PRESENT, Tense.PAST });
+		if (VerbUtils.isAuxiliaryMode(verb)) {
+			return null;
 		}
-		if (!VerbUtils.hasMode(verb) || !VerbUtils.hasDuration(verb)) {
-			throw new IllegalVerbConstraintException("Cannot determine tense without mode and duration");
-		}
-		return getRandomElement(Tense.values());
+		return randomTense();
 	}
 	
 	protected static Duration drawLegalDuration(VerbConstraint verb) throws IllegalVerbConstraintException {
-		if (VerbUtils.isInfinitiveOrGerund(verb)) {
-			return null;
-		}
 		if (!VerbUtils.hasMode(verb)) {
 			throw new IllegalVerbConstraintException("Cannot determine duration without mode");
+		}
+		if (VerbUtils.isInfinitiveOrGerund(verb)) {
+			return null;
 		}
 		return randomDuration();
 	}
 	
 	protected static Composition drawLegalComposition(VerbConstraint verb) throws IllegalVerbConstraintException {
-		if(VerbUtils.isInfinitiveOrGerund(verb)) {
-			return null;
-		}
 		if (!VerbUtils.hasMode(verb) || !VerbUtils.hasTense(verb)) {
+			if (VerbUtils.isInfinitiveOrGerund(verb)) {
+				return null;
+			}
 			throw new IllegalVerbConstraintException("Cannot determine composition without mode and tense");
 		}
 		return randomComposition();

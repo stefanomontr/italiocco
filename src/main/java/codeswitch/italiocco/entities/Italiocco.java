@@ -29,8 +29,4 @@ public class Italiocco {
 	
 	@GeneratedColumn(value = "STRING")
 	private String string;
-	
-	public String getString() {
-		return string;
-	}
 }
