@@ -12,75 +12,83 @@ import codeswitch.italiocco.exceptions.MissingVerbConstraintException;
 
 public class VerbValidator {
 	
-	protected static Pair<List<IllegalVerbConstraintException>, BiConsumer<String, Boolean>> illegalConstraintChecker() {
-		var exceptions = new ArrayList<IllegalVerbConstraintException>();
-		BiConsumer<String, Boolean> check = (String errorMsg, Boolean condition) -> {
-			if (condition) {
-				exceptions.add((new IllegalVerbConstraintException(errorMsg)));
-			}
-		};	
-		return Pair.of(exceptions, check);
-	}
-
-	protected static Pair<List<MissingVerbConstraintException>, BiConsumer<String, Boolean>> missingConstraintChecker() {
-		var exceptions = new ArrayList<MissingVerbConstraintException>();
-		BiConsumer<String, Boolean> check = (String errorMsg, Boolean condition) -> {
-			if (condition) {
-				exceptions.add((new MissingVerbConstraintException(errorMsg)));
-			}
-		};
-		return Pair.of(exceptions, check);
-	}
-	
 	public static List<IllegalVerbConstraintException> checkIllegalConstraints(VerbConstraint verb) {
-		var illegalConstraintChecker = illegalConstraintChecker();
-		var exceptions = illegalConstraintChecker.getFirst();
-		var check = illegalConstraintChecker.getSecond();
+		var checker = new IllegalVerbConstraintChecker();
 
 		if (VerbUtils.hasMode(verb)) {
 			switch (verb.getMode()) {
-				case CONDITIONAL -> check.accept("Conditional + Future", VerbUtils.isFuture(verb));
+				case CONDITIONAL -> {
+					checker.accept(
+							"CONDITIONAL + PASSIVE + CONTINUOUS",
+							VerbUtils.isPassive(verb) && VerbUtils.isContinuous(verb)
+					);
+					checker.accept("CONDITIONAL + TENSE", VerbUtils.hasTense(verb));
+				}
+				case FUTURE -> {
+					checker.accept(
+							"FUTURE + PASSIVE + CONTINUOUS",
+							VerbUtils.isPassive(verb) && VerbUtils.isContinuous(verb)
+					);
+					checker.accept("FUTURE + TENSE", VerbUtils.hasTense(verb));
+				}
 				case INFINITIVE -> {
-					check.accept("Infinitive + Person", VerbUtils.hasPerson(verb));
-					check.accept("Infinitive + Future", VerbUtils.isFuture(verb));
-					check.accept("Infinitive + Duration", VerbUtils.hasDuration(verb));
+					checker.accept("INFINITIVE + PERSON", VerbUtils.hasPerson(verb));
+					checker.accept("INFINITIVE + DURATION", VerbUtils.hasDuration(verb));
+					checker.accept("INFINITIVE + COMPOSITION", VerbUtils.hasComposition(verb));
 				}
 				case GERUND -> {
-					check.accept("Gerund + Person", VerbUtils.hasPerson(verb));
-					check.accept("Gerund + Future", VerbUtils.isFuture(verb));
-					check.accept("Gerund + Duration", VerbUtils.hasDuration(verb));
+					checker.accept("GERUND + PERSON", VerbUtils.hasPerson(verb));
+					checker.accept("GERUND + DURATION", VerbUtils.hasDuration(verb));
+					checker.accept("GERUND + COMPOSITION", VerbUtils.hasComposition(verb));
 				}
 				default -> {
 				}
 			}
 		}
-		return exceptions;
+		return checker.getExceptions();
 	}
 	
 	public static List<MissingVerbConstraintException> checkMissingConstraints(VerbConstraint verb) {
-		var missingConstraintChecker = missingConstraintChecker();
-		var exceptions = missingConstraintChecker.getFirst();
-		var check = missingConstraintChecker.getSecond();
-
-		// TODO: lemma
-		check.accept("- Mode", !VerbUtils.hasMode(verb));
-		check.accept("- Tense", !VerbUtils.hasTense(verb));
-		check.accept("- Diathesis", !VerbUtils.hasDiathesis(verb));
+		var checker = new MissingVerbCostraintChecker();
 
 		if (VerbUtils.hasMode(verb)) {
 			switch (verb.getMode()) {
 				case INDICATIVE -> {
-					check.accept("Indicative - Person", !VerbUtils.hasPerson(verb));
-					check.accept("Indicative - Duration", !VerbUtils.hasDuration(verb));
+					checker.accept("INDICATIVE – DIATHESIS", !VerbUtils.hasDiathesis(verb));
+					checker.accept("INDICATIVE – TENSE", !VerbUtils.hasTense(verb));
+					checker.accept("INDICATIVE – PERSON", !VerbUtils.hasPerson(verb));
+					checker.accept("INDICATIVE – DURATION", !VerbUtils.hasDuration(verb));
+					checker.accept("INDICATIVE – COMPOSITION", !VerbUtils.hasComposition(verb));
+					checker.accept("INDICATIVE – LEMMA", !VerbUtils.hasLemma(verb));
 				}
 				case CONDITIONAL -> {
-					check.accept("Conditional - Person", !VerbUtils.hasPerson(verb));
-					check.accept("Conditional - Duration", !VerbUtils.hasDuration(verb));
+					checker.accept("CONDITIONAL – DIATHESIS", !VerbUtils.hasDiathesis(verb));
+					checker.accept("CONDITIONAL – PERSON", !VerbUtils.hasPerson(verb));
+					checker.accept("CONDITIONAL – DURATION", !VerbUtils.hasDuration(verb));
+					checker.accept("CONDITIONAL – COMPOSITION", !VerbUtils.hasComposition(verb));
+					checker.accept("CONDITIONAL – LEMMA", !VerbUtils.hasLemma(verb));
 				}
-				default -> {}
+				case FUTURE -> {
+					checker.accept("FUTURE – DIATHESIS", !VerbUtils.hasDiathesis(verb));
+					checker.accept("FUTURE – PERSON", !VerbUtils.hasPerson(verb));
+					checker.accept("FUTURE – DURATION", !VerbUtils.hasDuration(verb));
+					checker.accept("FUTURE – COMPOSITION", !VerbUtils.hasComposition(verb));
+					checker.accept("FUTURE – LEMMA", !VerbUtils.hasLemma(verb));
+				}
+				case INFINITIVE -> {
+					checker.accept("INFINITIVE – DIATHESIS", !VerbUtils.hasDiathesis(verb));
+					checker.accept("INFINITIVE – TENSE", !VerbUtils.hasTense(verb));
+					checker.accept("INFINITIVE – LEMMA", !VerbUtils.hasLemma(verb));
+				}
+				case GERUND -> {
+					checker.accept("GERUND – DIATHESIS", !VerbUtils.hasDiathesis(verb));
+					checker.accept("GERUND – TENSE", !VerbUtils.hasTense(verb));
+					checker.accept("GERUND – LEMMA", !VerbUtils.hasLemma(verb));
+				}
+				default -> checker.accept("MISSING MODE", !VerbUtils.hasMode(verb));
 			}
 		}
-		return exceptions;
+		return checker.getExceptions();
 	}
 	
 }

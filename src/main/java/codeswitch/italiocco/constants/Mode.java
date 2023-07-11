@@ -4,5 +4,6 @@ public enum Mode {
 	INFINITIVE,
 	INDICATIVE,
 	CONDITIONAL,
-	GERUND
+	GERUND,
+	FUTURE
 }
