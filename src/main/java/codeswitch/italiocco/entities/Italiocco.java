@@ -2,6 +2,7 @@ package codeswitch.italiocco.entities;
 
 import java.math.BigInteger;
 
+import jakarta.persistence.Table;
 import org.hibernate.annotations.GeneratedColumn;
 
 import jakarta.persistence.Column;
@@ -15,6 +16,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
+@Table(name = "ITALIOCCO")
 public class Italiocco {
 	
 	@Id

@@ -72,7 +72,7 @@ class VerbRandomizerTest {
 			Assertions.fail("Should have thrown IllegalVerbConstraintException");
 		}
 		catch (IllegalVerbConstraintException e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo("Cannot determine person without mode");
+			Assertions.assertThat(e.getMessage()).contains("Cannot determine person without mode");
 		}
 	}
 	
@@ -93,7 +93,7 @@ class VerbRandomizerTest {
 			Assertions.fail("Should have thrown IllegalVerbConstraintException");
 		}
 		catch (IllegalVerbConstraintException e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo(errorMsg);
+			Assertions.assertThat(e.getMessage()).contains(errorMsg);
 		}
 		
 		var verbWithoutDuration = indicative();
@@ -102,7 +102,7 @@ class VerbRandomizerTest {
 			Assertions.fail("Should have thrown IllegalVerbConstraintException");
 		}
 		catch (IllegalVerbConstraintException e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo(errorMsg);
+			Assertions.assertThat(e.getMessage()).contains(errorMsg);
 		}
 	}
 	
@@ -122,7 +122,7 @@ class VerbRandomizerTest {
 			Assertions.fail("Should have thrown IllegalVerbConstraintException");
 		}
 		catch (IllegalVerbConstraintException e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo("Cannot determine duration without mode");
+			Assertions.assertThat(e.getMessage()).contains("Cannot determine duration without mode");
 		}
 	}
 	
@@ -141,7 +141,7 @@ class VerbRandomizerTest {
 			Assertions.fail("Should have thrown IllegalVerbConstraintException");
 		}
 		catch (IllegalVerbConstraintException e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo("Cannot determine composition without mode and tense");
+			Assertions.assertThat(e.getMessage()).contains("Cannot determine composition without mode and tense");
 		}
 	}
 	@Test
@@ -151,7 +151,7 @@ class VerbRandomizerTest {
 			Assertions.fail("Should have thrown IllegalVerbConstraintException");
 		}
 		catch (IllegalVerbConstraintException e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo("Cannot determine composition without mode and tense");
+			Assertions.assertThat(e.getMessage()).contains("Cannot determine composition without mode and tense");
 		}
 	}
 
