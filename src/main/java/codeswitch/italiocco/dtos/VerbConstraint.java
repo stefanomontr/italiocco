@@ -25,8 +25,8 @@ public class VerbConstraint {
 	private Composition composition;
 	private AdverbDto adverb;
 	
-	public String getDescriptiveVerbForm() {
-		return String.format("%s %s %s %s", mode, tense, composition, duration);
+	public String getDescription() {
+		return String.format("mode: %s; tense: %s; composition: %s; duration: %s", mode, tense, composition, duration);
 	}
 
 }

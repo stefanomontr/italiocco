@@ -38,7 +38,7 @@ public class VerbUtils {
 	
 	
 	public static boolean isFuture(VerbConstraint verb) {
-		return hasTense(verb) && Tense.FUTURE.equals(verb.getTense());
+		return hasMode(verb) && Mode.FUTURE.equals(verb.getMode());
 	}
 
 	public static boolean isConditional(VerbConstraint verb) {

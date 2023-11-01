@@ -58,17 +58,22 @@ public class VerbRandomizer {
 			return null;
 		}
 		if (!VerbUtils.hasMode(verb)) {
-			throw new IllegalVerbConstraintException("Cannot determine person without mode");
+			throw new IllegalVerbConstraintException("Cannot determine person without mode: " +
+					verb.getDescription());
 		}
 		return randomInt(8);
 	}
 	
 	protected static Tense drawLegalTense(VerbConstraint verb) throws IllegalVerbConstraintException {
-		if (VerbUtils.isInfinitiveOrGerund(verb) || VerbUtils.isConditional(verb)) {
+		if (VerbUtils.isInfinitiveOrGerund(verb)) {
 			return getRandomElement(new Tense[] { Tense.PRESENT, Tense.PAST });
 		}
+		if (VerbUtils.isAuxiliaryMode(verb)) {
+			return null;
+		}
 		if (!VerbUtils.hasMode(verb) || !VerbUtils.hasDuration(verb)) {
-			throw new IllegalVerbConstraintException("Cannot determine tense without mode and duration");
+			throw new IllegalVerbConstraintException("Cannot determine tense without mode and duration: " +
+					verb.getDescription());
 		}
 		return getRandomElement(Tense.values());
 	}
@@ -77,8 +82,12 @@ public class VerbRandomizer {
 		if (VerbUtils.isInfinitiveOrGerund(verb)) {
 			return null;
 		}
+		if (VerbUtils.isAuxiliaryMode(verb) && VerbUtils.isPassive(verb)) {
+			return Duration.PUNCTUAL;
+		}
 		if (!VerbUtils.hasMode(verb)) {
-			throw new IllegalVerbConstraintException("Cannot determine duration without mode");
+			throw new IllegalVerbConstraintException("Cannot determine duration without mode: " +
+					verb.getDescription());
 		}
 		return randomDuration();
 	}
@@ -87,8 +96,9 @@ public class VerbRandomizer {
 		if(VerbUtils.isInfinitiveOrGerund(verb)) {
 			return null;
 		}
-		if (!VerbUtils.hasMode(verb) || !VerbUtils.hasTense(verb)) {
-			throw new IllegalVerbConstraintException("Cannot determine composition without mode and tense");
+		if (!VerbUtils.hasMode(verb) || !(VerbUtils.hasTense(verb) || VerbUtils.isAuxiliaryMode(verb))) {
+			throw new IllegalVerbConstraintException("Cannot determine composition without mode and tense: " +
+					verb.getDescription());
 		}
 		return randomComposition();
 	}
